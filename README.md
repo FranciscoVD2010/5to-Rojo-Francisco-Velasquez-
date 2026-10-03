@@ -1,6 +1,7 @@
 # 5to-Rojo-Francisco-Velasquez-
 Pensamiento Computacional 
 Clase 1 Modificación de Readme
+Clase 2: Actividad 
 Patrón : por cada arepa adicional, el precio total decrece en 2 Bs. (pasa de aumentar 8, luego 6, luego 4, luego 2 Bs).
 Fórmula matemática Como el aumento disminuye de manera constante, la relación es de tipo cuadrática: (n es la cantidad de arepas y P el precio total). P(n) = n(11 - n)
 Fórmula aplicada P(10) = 1(10) - 10^2 = 110 - 100 = 10 \BsSiguiendo este patrón matemático el precio marginal seguirá bajando y se hará negativo en cierto punto lo demuestra un límite práctico del modelo.
