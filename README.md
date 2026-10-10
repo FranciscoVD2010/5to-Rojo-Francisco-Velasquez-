@@ -14,3 +14,4 @@ Reflexión: ¿Por qué el precio no aumenta siempre lo mismo? Porque se está ap
 
 
 clase 3: actividad de distancias representamos un mapa con circulos y lineas usando papel, marcadores y regla. propusimos rutas sumando distancias entre las ciudades propuestas, aplicando nuestros conocimientos para emcontrar la ruta mas corta, Ademas armamos un circuito con 6 LED en paralelo y 2 Led de distintos colores Actividades adjuntas:
+https://www.tinkercad.com/things/4DJ0ZFa71jE/editel?returnTo=%2Fdashboard&sharecode=Oh26H2tdtvVJIqiMgYCDjYdj-9GXIkGFBVOfgNrjOyo
