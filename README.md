@@ -196,4 +196,115 @@ Inicio
       Escribir "No aprueba"
     FinSi
   FinSi
-Fin
+
+
+CLASE 6 HOW TO CONTROL SERVO MOTORS
+
+https://www.tinkercad.com/things/9oUb6ZwyzQ7/editel?returnTo=%2Fdashboard%2Fdesigns%2Fcircuits
+
+/*
+============================================================
+Proyecto: Control de tres servomotores con Arduino
+Actividad: 29/10/2026
+------------------------------------------------------------
+- Servo 1 (pin 9): se activa con un PULSADOR. Al presionarlo
+gira a 90°, espera 1 segundo y regresa a 0°.
+- Servo 2 (pin 10): se controla con un SWITCH DESLIZANTE.
+Switch hacia GND -> 150°
+Switch al otro lado -> 30°
+- Servo 3 (pin 11): actuación INDEPENDIENTE y automática.
+Hace un barrido continuo de 0° a 180° y
+de vuelta, sin depender de ninguna entrada.
+Se usa millis() en lugar de delay() para que los tres servos
+funcionen al mismo tiempo sin bloquearse entre sí.
+============================================================
+*/
+
+#include <Servo.h> // Librería oficial para controlar servomotores
+
+// ---------------- Pines ----------------
+const int PIN_PULSADOR = 2; // Pulsador (con resistencia pull-up interna)
+const int PIN_SWITCH = 3; // Switch deslizante (con pull-up interna)
+const int PIN_SERVO_BOTON = 9; // Servo 1
+const int PIN_SERVO_SWITCH = 10; // Servo 2
+const int PIN_SERVO_BARRIDO = 11; // Servo 3
+
+// ---------------- Objetos Servo ----------------
+Servo servoBoton; // Servo 1: controlado por el pulsador
+Servo servoSwitch; // Servo 2: controlado por el switch
+Servo servoBarrido; // Servo 3: barrido automático
+
+// ---------------- Servo 1 (pulsador) ----------------
+const int ANGULO_REPOSO_BOTON = 0; // Posición inicial
+const int ANGULO_ACTIVO_BOTON = 90; // Posición al presionar
+const unsigned long TIEMPO_ACTIVO_BOTON = 1000; // ms que se mantiene en 90°
+bool servoBotonActivo = false; // ¿Está ejecutando su movimiento?
+unsigned long inicioMovimientoBoton = 0;
+int estadoAnteriorPulsador = HIGH; // Para detectar el momento exacto de la pulsación
+
+// ---------------- Servo 2 (switch) ----------------
+const int ANGULO_SWITCH_ACTIVADO = 150;
+const int ANGULO_SWITCH_DESACTIVADO = 30;
+
+// ---------------- Servo 3 (barrido) ----------------
+int anguloBarrido = 0; // Ángulo actual del barrido
+int pasoBarrido = 1; // +1 sube, -1 baja
+const unsigned long INTERVALO_BARRIDO = 15; // ms entre cada grado
+unsigned long ultimoPasoBarrido = 0;
+
+void setup() {
+// Entradas con pull-up interna: leen HIGH en reposo y LOW al conectarse a GND
+pinMode(PIN_PULSADOR, INPUT_PULLUP);
+pinMode(PIN_SWITCH, INPUT_PULLUP);
+
+// Asociar cada servo a su pin de señal
+servoBoton.attach(PIN_SERVO_BOTON);
+servoSwitch.attach(PIN_SERVO_SWITCH);
+servoBarrido.attach(PIN_SERVO_BARRIDO);
+
+// Posiciones iniciales
+servoBoton.write(ANGULO_REPOSO_BOTON);
+servoSwitch.write(ANGULO_SWITCH_DESACTIVADO);
+servoBarrido.write(anguloBarrido);
+}
+
+void loop() {
+unsigned long tiempoActual = millis();
+
+// ===== SERVO 1: pulsador =====
+int estadoPulsador = digitalRead(PIN_PULSADOR);
+
+// Se activa solo en el instante en que el botón pasa de suelto (HIGH) a presionado (LOW)
+if (estadoPulsador == LOW && estadoAnteriorPulsador == HIGH && !servoBotonActivo) {
+servoBoton.write(ANGULO_ACTIVO_BOTON);
+servoBotonActivo = true;
+inicioMovimientoBoton = tiempoActual;
+}
+estadoAnteriorPulsador = estadoPulsador;
+
+// Después del tiempo indicado, el servo regresa a su posición de reposo
+if (servoBotonActivo && tiempoActual - inicioMovimientoBoton >= TIEMPO_ACTIVO_BOTON) {
+servoBoton.write(ANGULO_REPOSO_BOTON);
+servoBotonActivo = false;
+}
+
+// ===== SERVO 2: switch deslizante =====
+if (digitalRead(PIN_SWITCH) == LOW) {
+servoSwitch.write(ANGULO_SWITCH_ACTIVADO); // Switch hacia GND
+} else {
+servoSwitch.write(ANGULO_SWITCH_DESACTIVADO); // Switch en la otra posición
+}
+
+// ===== SERVO 3: barrido automático independiente =====
+if (tiempoActual - ultimoPasoBarrido >= INTERVALO_BARRIDO) {
+ultimoPasoBarrido = tiempoActual;
+anguloBarrido += pasoBarrido;
+
+// Invertir la dirección al llegar a los extremos
+if (anguloBarrido >= 180 || anguloBarrido <= 0) {
+pasoBarrido = -pasoBarrido;
+}
+servoBarrido.write(anguloBarrido);
+}
+
+delay(10); // Pequeña pausa que también ayuda a evitar rebotes del pulsador
