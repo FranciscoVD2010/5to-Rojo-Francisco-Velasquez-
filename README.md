@@ -200,7 +200,7 @@ Inicio
 
 CLASE 6 HOW TO CONTROL SERVO MOTORS
 
-https://www.tinkercad.com/things/9oUb6ZwyzQ7/editel?returnTo=%2Fdashboard%2Fdesigns%2Fcircuits
+https://www.tinkercad.com/things/9oUb6ZwyzQ7/editel?returnTo=%2Fdashboard%2Fdesigns%2Fcircuits&sharecode=b4eItuzbaBpiZe3A_Poi_bjI_srwFS_T9lJqye3u07w
 
 /*
 ============================================================
